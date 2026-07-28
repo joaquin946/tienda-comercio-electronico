@@ -6,14 +6,23 @@ if (!isset($_SESSION['pedidos'])) {
     $_SESSION['pedidos'] = [];
 }
 
+// Contador propio para que la numeración no se repita
+if (!isset($_SESSION['ultimo_pedido'])) {
+    $_SESSION['ultimo_pedido'] = 0;
+}
+
 // Registra un pedido con los productos del carrito
 if (!empty($_SESSION['carrito'])) {
-    $numeroPedido = count($_SESSION['pedidos']) + 1;
+    $_SESSION['ultimo_pedido'] = $_SESSION['ultimo_pedido'] + 1;
+    $numeroPedido = $_SESSION['ultimo_pedido'];
 
     $_SESSION['pedidos'][$numeroPedido] = [
         'estado'    => 'pendiente',
         'productos' => $_SESSION['carrito']
     ];
+
+    // Limpia el carrito para no duplicar el pedido al recargar
+    unset($_SESSION['carrito']);
 }
 ?>
 <!DOCTYPE html>
